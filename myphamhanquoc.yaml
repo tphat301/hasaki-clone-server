@@ -1,0 +1,3678 @@
+openapi: 3.0.4
+info:
+  title: Swagger myphamhanquoc - OpenAPI 3.0
+  description: |-
+    Đây là một dự án cá nhân về bán hàng và ở phía máy chủ được viết bằng ExpressJs với các API được thiết lập bởi dolamthanhphat@gmail.com
+  version: 1.0.12
+
+servers:
+  - url: http://localhost:8080/
+tags:
+  - name: User Account
+  - name: Admin Account
+  - name: Admin Product
+  - name: Admin Category Product
+  - name: Purchase
+  - name: Client Product
+
+paths:
+  # Path user account
+  /auth/register:
+    post:
+      tags:
+        - User Account
+      summary: Đăng ký tài khoản user.
+      description: Đăng ký tài khoản user.
+      operationId: register
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBody'
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi user đăng ký tài khoản thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đăng ký thành công
+                  data:
+                    $ref: '#/components/schemas/RegisterSuccess'
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email đã tồn tại
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                EmailError:
+                  summary: Lỗi email
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Email chưa đúng định dạng
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu chưa đúng định dạng
+                ConfirmPasswordError:
+                  summary: Lỗi xác nhận mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Xác nhận mật khẩu không khớp
+
+  /auth/verify-email:
+    post:
+      tags:
+        - User Account
+      summary: Xác thực tài khoản user.
+      description: Xác thực tài khoản user.
+      operationId: verifyEmail
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailBody'
+        required: true
+      responses:
+        '200':
+          description: Xác thực tài khoản thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xác thực tài khoản thành công
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xác thực tài khoản không thành công
+
+  /auth/resend-verify-email:
+    post:
+      tags:
+        - User Account
+      summary: Gửi lại email xác thực cho user
+      description: Gửi lại email xác thực cho user khi user chưa nhận được email.
+      operationId: resendVerifyEmail
+      security:
+        - UserAuth: []
+      responses:
+        '200':
+          description: Email xác thực tài khoản đã được gửi thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email xác thực tài khoản đã được gửi thành công
+
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email xác thực tài khoản đã được gửi không thành công
+
+  /auth/login:
+    post:
+      tags:
+        - User Account
+      summary: Đăng nhập tài khoản user.
+      description: Đăng nhập vào hệ thống.
+      operationId: login
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+        required: true
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login success
+                  data:
+                    $ref: '#/components/schemas/LoginSuccess'
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                EmailError:
+                  summary: Lỗi email
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Email chưa đúng định dạng
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu chưa đúng định dạng
+                EmailPasswordError:
+                  summary: Lỗi xác thực email và mật khẩu
+                  value:
+                    message: Lỗi xác thực email và mật khẩu
+                    errors:
+                      email: Email hoặc mật khẩu chưa chính xác
+
+  /auth/me:
+    get:
+      tags:
+        - User Account
+      summary: Lấy thông tin user.
+      description: Lấy thông tin user từ hệ thống.
+      operationId: getMe
+      security:
+        - UserAuth: []
+      responses:
+        '200':
+          description: Lấy thông tin user thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy thông tin user thành công
+                  data:
+                    $ref: '#/components/schemas/GetMe'
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy thông tin tài khoản không thành công
+
+    patch:
+      tags:
+        - User Account
+      summary: Cập nhật profile cho user.
+      description: Cập nhật thông tin profile cho user.
+      operationId: updateProfileUser
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileUserBody'
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi cập nhật thông tin profile cho user thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cập nhật thông tin profile cho user thành công
+                  data:
+                    $ref: '#/components/schemas/UpdateProfileUserSuccess'
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token chưa được gửi lên
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                AddressError:
+                  summary: Lỗi address
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      address: Địa chỉ chưa đúng định dạng
+                DateOfBirthError:
+                  summary: Lỗi ngày sinh
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      date_of_birth: Ngày sinh chưa đúng định dạng
+                NameError:
+                  summary: Lỗi họ tên
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Họ tên không đúng định dạng
+                PhoneError:
+                  summary: Lỗi số điện thoại
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Số điện thoại không đúng định dạng
+                AvatarError:
+                  summary: Lỗi ảnh đại diện user
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Ảnh đại diện không đúng định dạng
+
+  /auth/logout:
+    post:
+      tags:
+        - User Account
+      summary: Đăng xuất tài khoản user.
+      description: Đăng xuất tài khoản.
+      operationId: logout
+      security:
+        - UserAuth: []
+
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+        required: true
+
+      responses:
+        '200':
+          description: Đăng xuất tài khoản thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đăng xuất tài khoản thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token hết hạn
+
+  /auth/change-password:
+    post:
+      tags:
+        - User Account
+      summary: Thay đổi mật khẩu user.
+      description: Thay đổi mật khẩu tài khoản user.
+      operationId: changePasswordUser
+      security:
+        - UserAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordUserBody'
+        required: true
+      responses:
+        '200':
+          description: Thay đổi mật khẩu thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Thay đổi mật khẩu thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Thay đổi mật khẩu không thành công
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                OldPasswordError:
+                  summary: Lỗi nhập mật khẩu cũ
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu cũ chưa chính xác
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu mới chưa đúng định dạng
+                ConfirmPasswordError:
+                  summary: Lỗi xác nhận mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Xác nhận mật khẩu mới không khớp
+
+  /auth/forgot-password:
+    post:
+      tags:
+        - User Account
+      summary: Quên mật khẩu user.
+      description: Quên mật khẩu tài khoản user.
+      operationId: forgotPasswordUser
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: dolamthanhphat@gmail.com
+        required: true
+      responses:
+        '200':
+          description: Thông tin trả cho client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bạn vui lòng kiểm tra email để xác minh tài khoản
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email xác minh lấy lại mật khẩu gửi đi không thành công
+        '404':
+          description: Lỗi liên quan đến http status code 404
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Không tìm thấy email
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email chưa đúng định dạng
+
+  /auth/reset-password:
+    post:
+      tags:
+        - User Account
+      summary: Làm mới mật khẩu user.
+      description: Làm mới mật khẩu tài khoản user.
+      operationId: resetPasswordUser
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                forgot_password_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+                password:
+                  type: string
+                  example: Phat123@#1
+                confirm_password:
+                  type: string
+                  example: Phat123@#1
+        required: true
+      responses:
+        '200':
+          description: Thông tin trả cho client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đặt lại mật khẩu thành công
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đặt lại mật khẩu không thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token chưa đúng định dạng
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu chưa đúng định dạng
+                ConfirmPasswordError:
+                  summary: Lỗi xác nhận mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Xác nhận mật khẩu không khớp
+
+  /auth/upload-avatar:
+    post:
+      tags:
+        - User Account
+      summary: Tải ảnh đại diện cho user.
+      description: Tải ảnh đại diện cho user account.
+      operationId: uploadAvatarUser
+      security:
+        - UserAuth: []
+      responses:
+        '200':
+          description: Dữ liệu trả về cho client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tải ảnh đại diện cho user thành công
+                  data:
+                    type: string
+                    example: 'http://localhost:8080/image/482077984_658517360083420_1707021771831644247_n.jpg'
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tải ảnh đại diện cho user không thành công
+
+  /auth/refresh-token:
+    post:
+      tags:
+        - User Account
+      summary: Làm mới token cho user account.
+      description: Cấp token mới khi access_token bị hết hạn.
+      operationId: refreshToken
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.mW-T-VCwP-4uaELdobej3wQeGRlUIzLpspmh-iC5DYE
+        required: true
+      responses:
+        '200':
+          description: Làm mới token cho user account thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Refresh token thành công
+                  data:
+                    type: object
+                    properties:
+                      new_access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+                      new_refresh_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.mW-T-VCwP-4uaELdobej3wQeGRlUIzLpspmh-iC5DYE
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token không đúng định dạng
+
+  # Path admin product
+  /admin/products:
+    post:
+      tags:
+        - Admin Product
+      summary: Thêm mới sản phẩm.
+      description: Thêm mới sản phẩm khi sản phẩm chưa có trong database.
+      operationId: adminProductCreate
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdminProductBody'
+        required: true
+      responses:
+        '201':
+          description: Thông tin dữ liệu trả về cho client khi thêm mới sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Thêm sản phẩm thành công
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slug đã tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                SlugError:
+                  summary: Lỗi slug
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Slug chưa đúng định dạng
+                NameError:
+                  summary: Lỗi tên sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Tên chưa đúng định dạng
+
+    patch:
+      tags:
+        - Admin Product
+      summary: Cập nhật sản phẩm.
+      description: Cập nhật sản phẩm khi sản phẩm đã có trong database.
+      operationId: adminProductUpdate
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAdminProductBody'
+        required: true
+      responses:
+        '201':
+          description: Thông tin dữ liệu trả về cho client khi cập nhật sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cập nhật sản phẩm thành công
+                  data:
+                    $ref: '#/components/schemas/UpdateAdminProductSuccess'
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slug đã tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                SlugError:
+                  summary: Lỗi slug
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Slug chưa đúng định dạng
+                NameError:
+                  summary: Lỗi tên sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Tên chưa đúng định dạng
+
+    get:
+      tags:
+        - Admin Product
+      summary: Lấy danh sách sản phẩm.
+      description: Lấy danh sách sản phẩm khi sản phẩm có trong database.
+      operationId: adminProductRead
+      security:
+        - AdminAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Trang hiện tại
+          schema:
+            type: string
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Giới hạn bao nhiêu phần tử trên một trang
+          schema:
+            type: string
+            example: 30
+
+      responses:
+        '200':
+          description: Dữ liệu trả về khi client lấy danh sách sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy danh sách sản phẩm thành công
+                  data:
+                    $ref: '#/components/schemas/ProductSuccess'
+
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slug đã tồn tại
+
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                SlugError:
+                  summary: Lỗi slug
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Slug chưa đúng định dạng
+                NameError:
+                  summary: Lỗi tên sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Tên chưa đúng định dạng
+
+  /admin/products/:product_id:
+    get:
+      tags:
+        - Admin Product
+      summary: Lấy chi tiết sản phẩm.
+      description: Lấy chi tiết sản phẩm khi sản phẩm có trong database.
+      operationId: adminProductReadDetail
+      security:
+        - AdminAuth: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: Id của sản phẩm
+          schema:
+            type: string
+            example: 67ff6647cb2e682ef927ce41
+
+      responses:
+        '200':
+          description: Dữ liệu trả về khi client lấy danh sách sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy danh sách sản phẩm thành công
+                  data:
+                    $ref: '#/components/schemas/ProductDetailSuccess'
+
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Id không tồn tại
+
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                IdError:
+                  summary: Lỗi id sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Id chưa đúng định dạng
+
+  /admin/products/delete:
+    delete:
+      tags:
+        - Admin Product
+      summary: Xóa sản phẩm.
+      description: Xóa sản phẩm khi sản phẩm đã có trong database.
+      operationId: adminProductDelete
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              properties:
+                product_ids:
+                  type: array
+                  items:
+                    type: string
+                    example: 67ff6647cb2e682ef927ce41
+
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi xóa sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xóa sản phẩm thành công
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sản phẩm không tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+  /admin/products/upload-image:
+    post:
+      tags:
+        - Admin Product
+      summary: Upload ảnh của sản phẩm.
+      description: Upload ảnh của sản phẩm
+      operationId: adminProductUploadImage
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  description: Image URL string
+                  example: 482077984_658517360083420_1707021771831644247_n.jpg
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi upload ảnh sản phẩm
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload ảnh sản phẩm thành công
+                  data:
+                    type: string
+                    example: http://localhost:8080/image/482077984_658517360083420_1707021771831644247_n.jpg
+
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload ảnh sản phẩm không thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+  /admin/products/upload-images:
+    post:
+      tags:
+        - Admin Product
+      summary: Upload nhiều ảnh của sản phẩm.
+      description: Upload nhiều ảnh của sản phẩm
+      operationId: adminProductUploadImages
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    description: Image URL string
+                    example: 482077984_658517360083420_1707021771831644247_n.jpg
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi upload nhiều ảnh sản phẩm
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload ảnh sản phẩm thành công
+                  data:
+                    type: array
+                    items:
+                      type: string
+                      example: http://localhost:8080/image/482077984_658517360083420_1707021771831644247_n.jpg
+
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Upload ảnh sản phẩm không thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+  # Path admin account
+  /admin/auth/register:
+    post:
+      tags:
+        - Admin Account
+      summary: Đăng ký tài khoản user.
+      description: Đăng ký tài khoản user.
+      operationId: register
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBody'
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi user đăng ký tài khoản thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đăng ký thành công
+                  data:
+                    $ref: '#/components/schemas/RegisterSuccess'
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email đã tồn tại
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                EmailError:
+                  summary: Lỗi email
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Email chưa đúng định dạng
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu chưa đúng định dạng
+                ConfirmPasswordError:
+                  summary: Lỗi xác nhận mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Xác nhận mật khẩu không khớp
+
+  /admin/auth/verify-email:
+    post:
+      tags:
+        - Admin Account
+      summary: Xác thực tài khoản user.
+      description: Xác thực tài khoản user.
+      operationId: verifyEmail
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailBody'
+        required: true
+      responses:
+        '200':
+          description: Xác thực tài khoản thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xác thực tài khoản thành công
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xác thực tài khoản không thành công
+
+  /admin/auth/resend-verify-email:
+    post:
+      tags:
+        - Admin Account
+      summary: Gửi lại email xác thực cho user
+      description: Gửi lại email xác thực cho user khi user chưa nhận được email.
+      operationId: resendVerifyEmail
+      security:
+        - AdminAuth: []
+      responses:
+        '200':
+          description: Email xác thực tài khoản đã được gửi thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email xác thực tài khoản đã được gửi thành công
+
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email xác thực tài khoản đã được gửi không thành công
+
+  /admin/auth/login:
+    post:
+      tags:
+        - Admin Account
+      summary: Đăng nhập tài khoản user.
+      description: Đăng nhập vào hệ thống.
+      operationId: login
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+        required: true
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login success
+                  data:
+                    $ref: '#/components/schemas/LoginSuccess'
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                EmailError:
+                  summary: Lỗi email
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Email chưa đúng định dạng
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu chưa đúng định dạng
+                EmailPasswordError:
+                  summary: Lỗi xác thực email và mật khẩu
+                  value:
+                    message: Lỗi xác thực email và mật khẩu
+                    errors:
+                      email: Email hoặc mật khẩu chưa chính xác
+
+  /admin/auth/me:
+    get:
+      tags:
+        - Admin Account
+      summary: Lấy thông tin user.
+      description: Lấy thông tin user từ hệ thống.
+      operationId: getMe
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lấy thông tin user thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy thông tin user thành công
+                  data:
+                    $ref: '#/components/schemas/GetMe'
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy thông tin tài khoản không thành công
+
+    patch:
+      tags:
+        - User Account
+      summary: Cập nhật profile cho user.
+      description: Cập nhật thông tin profile cho user.
+      operationId: updateProfileUser
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileUserBody'
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi cập nhật thông tin profile cho user thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cập nhật thông tin profile cho user thành công
+                  data:
+                    $ref: '#/components/schemas/UpdateProfileUserSuccess'
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token chưa được gửi lên
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                AddressError:
+                  summary: Lỗi address
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      address: Địa chỉ chưa đúng định dạng
+                DateOfBirthError:
+                  summary: Lỗi ngày sinh
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      date_of_birth: Ngày sinh chưa đúng định dạng
+                NameError:
+                  summary: Lỗi họ tên
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Họ tên không đúng định dạng
+                PhoneError:
+                  summary: Lỗi số điện thoại
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Số điện thoại không đúng định dạng
+                AvatarError:
+                  summary: Lỗi ảnh đại diện user
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Ảnh đại diện không đúng định dạng
+
+  /admin/auth/logout:
+    post:
+      tags:
+        - Admin Account
+      summary: Đăng xuất tài khoản user.
+      description: Đăng xuất tài khoản.
+      operationId: logout
+      security:
+        - AdminAuth: []
+
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+        required: true
+
+      responses:
+        '200':
+          description: Đăng xuất tài khoản thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đăng xuất tài khoản thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token hết hạn
+
+  /admin/auth/change-password:
+    post:
+      tags:
+        - Admin Account
+      summary: Thay đổi mật khẩu user.
+      description: Thay đổi mật khẩu tài khoản user.
+      operationId: changePasswordUser
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordUserBody'
+        required: true
+      responses:
+        '200':
+          description: Thay đổi mật khẩu thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Thay đổi mật khẩu thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Thay đổi mật khẩu không thành công
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                OldPasswordError:
+                  summary: Lỗi nhập mật khẩu cũ
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu cũ chưa chính xác
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu mới chưa đúng định dạng
+                ConfirmPasswordError:
+                  summary: Lỗi xác nhận mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Xác nhận mật khẩu mới không khớp
+
+  /admin/auth/forgot-password:
+    post:
+      tags:
+        - Admin Account
+      summary: Quên mật khẩu user.
+      description: Quên mật khẩu tài khoản user.
+      operationId: forgotPasswordUser
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: dolamthanhphat@gmail.com
+        required: true
+      responses:
+        '200':
+          description: Thông tin trả cho client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Bạn vui lòng kiểm tra email để xác minh tài khoản
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email xác minh lấy lại mật khẩu gửi đi không thành công
+        '404':
+          description: Lỗi liên quan đến http status code 404
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Không tìm thấy email
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email chưa đúng định dạng
+
+  /admin/auth/reset-password:
+    post:
+      tags:
+        - Admin Account
+      summary: Làm mới mật khẩu user.
+      description: Làm mới mật khẩu tài khoản user.
+      operationId: resetPasswordUser
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                forgot_password_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+                password:
+                  type: string
+                  example: Phat123@#1
+                confirm_password:
+                  type: string
+                  example: Phat123@#1
+        required: true
+      responses:
+        '200':
+          description: Thông tin trả cho client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đặt lại mật khẩu thành công
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Đặt lại mật khẩu không thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token chưa đúng định dạng
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                PasswordError:
+                  summary: Lỗi mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Mật khẩu chưa đúng định dạng
+                ConfirmPasswordError:
+                  summary: Lỗi xác nhận mật khẩu
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      email: Xác nhận mật khẩu không khớp
+
+  /admin/auth/upload-avatar:
+    post:
+      tags:
+        - Admin Account
+      summary: Tải ảnh đại diện cho user.
+      description: Tải ảnh đại diện cho user account.
+      operationId: uploadAvatarUser
+      security:
+        - AdminAuth: []
+      responses:
+        '200':
+          description: Dữ liệu trả về cho client
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tải ảnh đại diện cho user thành công
+                  data:
+                    type: string
+                    example: 'http://localhost:8080/image/482077984_658517360083420_1707021771831644247_n.jpg'
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Tải ảnh đại diện cho user không thành công
+
+  /admin/auth/refresh-token:
+    post:
+      tags:
+        - Admin Account
+      summary: Làm mới token cho user account.
+      description: Cấp token mới khi access_token bị hết hạn.
+      operationId: refreshToken
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.mW-T-VCwP-4uaELdobej3wQeGRlUIzLpspmh-iC5DYE
+        required: true
+      responses:
+        '200':
+          description: Làm mới token cho user account thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Refresh token thành công
+                  data:
+                    type: object
+                    properties:
+                      new_access_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+                      new_refresh_token:
+                        type: string
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.mW-T-VCwP-4uaELdobej3wQeGRlUIzLpspmh-iC5DYE
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token không đúng định dạng
+
+  # Path purchase
+  /purchases:
+    get:
+      tags:
+        - Purchase
+      summary: Lấy danh sách giỏ hàng.
+      description: Lấy danh sách giỏ hàng có sẵn.
+      operationId: readCart
+      security:
+        - UserAuth: []
+      parameters:
+        - name: status
+          in: query
+          required: true
+          description: Trạng thái của đơn hàng
+          schema:
+            type: string
+            example: '-1'
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi lấy danh sách giỏ hàng thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy danh sách giỏ hàng thành công
+                  data:
+                    $ref: '#/components/schemas/ListPurchase'
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                ProductIdError:
+                  summary: Lỗi trạng thái đơn hàng
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      status: Trạng thái đơn hàng không đúng định dạng
+
+    delete:
+      tags:
+        - Purchase
+      summary: Xóa giỏ hàng.
+      description: Xóa giỏ hàng.
+      operationId: deleteCart
+      security:
+        - UserAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              properties:
+                puschase_ids:
+                  type: array
+                  items:
+                    type: string
+                    example: 67ff6647cb2e682ef927ce41
+        required: true
+
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi xóa giỏ hàng thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xóa giỏ hàng thành công
+        '500':
+          description: Lỗi liên quan đến http status code 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xóa giỏ hàng không thành công
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+  /purchases/add-to-cart:
+    post:
+      tags:
+        - Purchase
+      summary: Thêm vào giỏ hàng.
+      description: Thêm sản phẩm vào trong giỏ hàng.
+      operationId: addToCart
+      security:
+        - UserAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              properties:
+                product_id:
+                  type: string
+                  example: 67ff6647cb2e682ef927ce41
+                buy_count:
+                  type: integer
+                  example: 10
+
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi thêm sản phẩm vào trong giỏ hàng thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Thêm sản phẩm vào giỏ hàng thành công
+                  data:
+                    $ref: '#/components/schemas/Purchase'
+
+        '404':
+          description: Lỗi liên quan đến http status code 404
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sản phẩm không tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                ProductIdError:
+                  summary: Lỗi id sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      product_id: Id sản phẩm không đúng định dạng
+                BuyCountError:
+                  summary: Lỗi số lượng mua
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      buy_count: Số lượng mua chưa đúng định dạng
+
+  /purchases/update-cart:
+    patch:
+      tags:
+        - Purchase
+      summary: Cập nhật giỏ hàng.
+      description: Cập nhật giỏ hàng.
+      operationId: updateCart
+      security:
+        - UserAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              properties:
+                product_id:
+                  type: string
+                  example: 67ff6647cb2e682ef927ce41
+                buy_count:
+                  type: integer
+                  example: 10
+
+        required: true
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi cập nhật giỏ hàng thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cập nhật giỏ hàng thành công
+                  data:
+                    $ref: '#/components/schemas/Purchase'
+
+        '404':
+          description: Lỗi liên quan đến http status code 404
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sản phẩm không tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                ProductIdError:
+                  summary: Lỗi id sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      product_id: Id sản phẩm không đúng định dạng
+                BuyCountError:
+                  summary: Lỗi số lượng mua
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      buy_count: Số lượng mua chưa đúng định dạng
+
+  /purchases/buy-products:
+    post:
+      tags:
+        - Purchase
+      summary: Mua hàng có trong giỏ hàng.
+      description: Mua hàng có trong giỏ hàng.
+      operationId: buyCart
+      security:
+        - UserAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              properties:
+                body_cart:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product_id:
+                        type: string
+                        example: 67ff663bcb2e682ef927ce3f
+                      buy_count:
+                        type: integer
+                        example: 90
+        required: true
+
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi mua hàng thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Mua hàng thành công
+                  data:
+                    $ref: '#/components/schemas/ListPurchase'
+        '404':
+          description: Lỗi liên quan đến http status code 404
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Sản phẩm không có trong giỏ hàng
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+              examples:
+                ProductIdError:
+                  summary: Lỗi id sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      product_id: Id sản phẩm không đúng định dạng
+                BuyCountError:
+                  summary: Lỗi số lượng mua
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      buy_count: Số lượng mua chưa đúng định dạng
+
+  # Path admin category product
+  /admin/category_products:
+    post:
+      tags:
+        - Admin Category Product
+      summary: Thêm mới danh mục sản phẩm.
+      description: Thêm mới danh mục sản phẩm khi danh mục sản phẩm chưa có trong database.
+      operationId: adminCategoryProductCreate
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdminCategoryProductBody'
+        required: true
+      responses:
+        '201':
+          description: Thông tin dữ liệu trả về cho client khi thêm mới danh mục sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Thêm danh mục sản phẩm thành công
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slug đã tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                SlugError:
+                  summary: Lỗi slug
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Slug chưa đúng định dạng
+                NameError:
+                  summary: Lỗi tên danh mục sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Tên danh mục sản phẩm chưa đúng định dạng
+
+    patch:
+      tags:
+        - Admin Category Product
+      summary: Cập nhật danh mục sản phẩm.
+      description: Cập nhật danh mục sản phẩm khi danh mục sản phẩm đã có trong database.
+      operationId: adminProductUpdate
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAdminCategoryProductBody'
+        required: true
+      responses:
+        '201':
+          description: Thông tin dữ liệu trả về cho client khi cập nhật danh mục sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Cập nhật danh mục sản phẩm thành công
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slug đã tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                SlugError:
+                  summary: Lỗi slug
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Slug chưa đúng định dạng
+                NameError:
+                  summary: Lỗi tên danh mục sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Tên danh mục sản phẩm chưa đúng định dạng
+
+    get:
+      tags:
+        - Admin Category Product
+      summary: Lấy danh sách danh mục sản phẩm.
+      description: Lấy danh sách sản phẩm khi danh mục sản phẩm có trong database.
+      operationId: adminCategoryProductRead
+      security:
+        - AdminAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Trang hiện tại
+          schema:
+            type: string
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Giới hạn bao nhiêu phần tử trên một trang
+          schema:
+            type: string
+            example: 30
+
+      responses:
+        '200':
+          description: Dữ liệu trả về khi client lấy danh sách danh mục sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy danh sách danh mục sản phẩm thành công
+                  data:
+                    $ref: '#/components/schemas/CategoryProductSuccess'
+
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slug đã tồn tại
+
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                SlugError:
+                  summary: Lỗi slug
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Slug chưa đúng định dạng
+                NameError:
+                  summary: Lỗi tên danh mục sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Tên danh mục chưa đúng định dạng
+
+  /admin/category_products/delete:
+    delete:
+      tags:
+        - Admin Category Product
+      summary: Xóa danh mục sản phẩm.
+      description: Xóa danh mục sản phẩm khi danh mục sản phẩm đã có trong database.
+      operationId: adminCategoryProductDelete
+      security:
+        - AdminAuth: []
+      requestBody:
+        description: Thông tin client gửi lên body
+        content:
+          application/json:
+            schema:
+              properties:
+                category_ids:
+                  type: array
+                  items:
+                    type: string
+                    example: 67ff6647cb2e682ef927ce41
+        required: true
+
+      responses:
+        '200':
+          description: Thông tin dữ liệu trả về cho client khi xóa danh mục sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Xóa danh mục sản phẩm thành công
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Danh mục sản phẩm không tồn tại
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+
+  # Path product
+  /products:
+    get:
+      tags:
+        - Client Product
+      summary: Lấy danh sách sản phẩm.
+      description: Lấy danh sách sản phẩm khi sản phẩm có trong database.
+      operationId: productList
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Trang hiện tại
+          schema:
+            type: string
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: Giới hạn bao nhiêu phần tử trên một trang
+          schema:
+            type: string
+            example: 30
+        - name: order
+          in: query
+          required: false
+          description: Lọc sản phẩm theo thứ tự giảm dần hoặc tăng dần
+          schema:
+            type: string
+            example: desc
+        - name: sort_by
+          in: query
+          required: false
+          description: Lọc sản phẩm theo giá trị created_at hoặc view hoặc sold hoặc price
+          schema:
+            type: string
+            example: created_at
+        - name: category
+          in: query
+          required: false
+          description: Lọc sản phẩm theo category product id
+          schema:
+            type: string
+            example: 6800a0b96f2021b51a50491a
+        - name: exclude
+          in: query
+          required: false
+          description: Loại trừ sản phẩm nào đó dựa vào product id
+          schema:
+            type: string
+            example: 6800a0b96f2021b51a50491a
+        - name: rating_filter
+          in: query
+          required: false
+          description: Lọc sản phẩm theo số sao được truyền lên
+          schema:
+            type: string
+            example: '2'
+        - name: price_max
+          in: query
+          required: false
+          description: Lọc sản phẩm theo khoảng giá
+          schema:
+            type: string
+            example: '50000'
+        - name: price_min
+          in: query
+          required: false
+          description: Lọc sản phẩm theo khoảng giá
+          schema:
+            type: string
+            example: '200000'
+        - name: name
+          in: query
+          required: false
+          description: Lọc sản phẩm theo tên của sản phẩm
+          schema:
+            type: string
+            example: Mỹ phẩm hàng hiệu 2025
+
+      responses:
+        '200':
+          description: Dữ liệu trả về khi client lấy danh sách sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy danh sách sản phẩm thành công
+                  data:
+                    $ref: '#/components/schemas/ProductSuccess'
+
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Slug đã tồn tại
+
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                SlugError:
+                  summary: Lỗi slug
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Slug chưa đúng định dạng
+                NameError:
+                  summary: Lỗi tên sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      name: Tên chưa đúng định dạng
+
+  /products/:product_id:
+    get:
+      tags:
+        - Client Product
+      summary: Lấy chi tiết sản phẩm.
+      description: Lấy chi tiết sản phẩm khi sản phẩm có trong database.
+      operationId: productDetail
+      security:
+        - AdminAuth: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          description: Id của sản phẩm
+          schema:
+            type: string
+            example: 67ff6647cb2e682ef927ce41
+
+      responses:
+        '200':
+          description: Dữ liệu trả về khi client lấy danh sách sản phẩm thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lấy danh sách sản phẩm thành công
+                  data:
+                    $ref: '#/components/schemas/ProductDetailSuccess'
+
+        '419':
+          description: Lỗi liên quan đến http status code 419
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Id không tồn tại
+
+        '401':
+          description: Lỗi liên quan đến http status code 401
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi JWT
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                TokenError:
+                  summary: Lỗi JWT
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      token: Access token hết hạn
+        '422':
+          description: Lỗi liên quan đến http status code 422
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Lỗi validation
+                  errors:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      items:
+                        type: string
+
+              examples:
+                IdError:
+                  summary: Lỗi id sản phẩm
+                  value:
+                    message: Lỗi xác thực dữ liệu
+                    errors:
+                      slug: Id chưa đúng định dạng
+
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: dolamthanhphat@gmail.com
+        password:
+          type: string
+          example: Phat123!
+        confirm_password:
+          type: string
+          example: Phat123!
+
+    LoginSuccess:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.mW-T-VCwP-4uaELdobej3wQeGRlUIzLpspmh-iC5DYE
+        expires_access_token:
+          type: string
+          example: 7d
+        expires_refresh_token:
+          type: string
+          example: 30d
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: MongoId
+              example: 67e61f3e69cb7eb1c30b70fc
+            email:
+              type: string
+              example: john@gmail.com
+            name:
+              type: string
+              example: John
+            phone:
+              type: string
+              example: 0987654321
+            date_of_birth:
+              type: string
+              format: ISO8601
+              example: 2024-05-04T16:31:25.387Z
+            created_at:
+              type: string
+              format: ISO8601
+              example: 2025-03-28T04:02:06.576Z
+            updated_at:
+              type: string
+              format: ISO8601
+              example: 2025-03-28T04:02:06.576Z
+            avatar:
+              type: string
+              example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+
+    RegisterBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: dolamthanhphat@gmail.com
+        password:
+          type: string
+          example: Phat123!
+
+    RegisterSuccess:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+        refresh_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MSwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.mW-T-VCwP-4uaELdobej3wQeGRlUIzLpspmh-iC5DYE
+        expires_access_token:
+          type: string
+          example: 7d
+        expires_refresh_token:
+          type: string
+          example: 30d
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: MongoId
+              example: 67e61f3e69cb7eb1c30b70fc
+            email:
+              type: string
+              example: john@gmail.com
+            phone:
+              type: string
+              example: 0987654321
+            name:
+              type: string
+              example: John
+            date_of_birth:
+              type: string
+              format: ISO8601
+              example: 2024-05-04T16:31:25.387Z
+            created_at:
+              type: string
+              format: ISO8601
+              example: 2025-03-28T04:02:06.576Z
+            updated_at:
+              type: string
+              format: ISO8601
+              example: 2025-03-28T04:02:06.576Z
+            avatar:
+              type: string
+              example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+
+    VerifyEmailBody:
+      type: object
+      properties:
+        email_verify_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdlNjFmM2U2OWNiN2ViMWMzMGI3MGZjIiwidG9rZW5fdHlwZSI6MCwidmVyaWZ5IjoxLCJpYXQiOjE3NDMyNTQyNzgsImV4cCI6MTc1MTg5NDI3OH0.nrUcPBFCfSYYfwb7yCjq_PT4u5N_xLYKYO7hDCNQUFQ
+
+    GetMe:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 67e61f3e69cb7eb1c30b70fc
+        email:
+          type: string
+          example: dolamthanhphat@gmail.com
+        name:
+          type: string
+          example: Phat
+        phone:
+          type: string
+          example: 0987654321
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2024-05-04T16:31:25.387Z
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        avatar:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+
+    UpdateProfileUserBody:
+      type: object
+      properties:
+        address:
+          type: string
+          example: Ho Chi Minh City
+        name:
+          type: string
+          example: Phat Developer
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        phone:
+          type: string
+          example: 0987654321
+        avatar:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+
+    UpdateProfileUserSuccess:
+      type: object
+      properties:
+        id:
+          type: string
+          format: MongoId
+          example: 67e61f3e69cb7eb1c30b70fc
+        email:
+          type: string
+          example: john@gmail.com
+        phone:
+          type: string
+          example: 0987654321
+        name:
+          type: string
+          example: John
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2024-05-04T16:31:25.387Z
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        avatar:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+
+    ChangePasswordUserBody:
+      type: object
+      properties:
+        old_password:
+          type: string
+          example: Phat123@
+        password:
+          type: string
+          example: Phat123!
+        confirm_password:
+          type: string
+          example: Phat123!
+
+    CreateAdminProductBody:
+      type: object
+      properties:
+        category:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+          description: Id danh mục của sản phẩm có thể truyền lên body hoặc không truyền tùy vào client
+        image:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+          description: Ảnh của sản phẩm có thể truyền lên body hoặc không truyền tùy vào client
+        images:
+          type: array
+          items:
+            type: string
+            example:
+              [
+                'http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg',
+                'http/localhost:8080/images/482077984_658517390083420_1707021771831644247_n.jpg',
+                http/localhost:8080/images/482077984_618517360083420_1707021771831644247_n.jpg
+              ]
+            description: Ảnh con của sản phẩm có thể truyền lên body hoặc không truyền tùy vào client
+        slug:
+          type: string
+          example: my-pham-thoi-thuong-2025
+        name:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        price:
+          type: integer
+          example: 100000
+        price_before_discount:
+          type: integer
+          example: 200000
+          description: Giá trước khuyến mãi của sản phẩm có thể truyền hoặc không và luôn lớn hơn giá mới
+        quantity:
+          type: integer
+          example: 100
+        sold:
+          type: integer
+          example: 100
+        view:
+          type: integer
+          example: 100
+        rating:
+          type: integer
+          example: 5
+          description: Số sao của sản phẩm nằm trong khoảng từ 1 đến 5
+        description:
+          type: string
+          example: Mua son giao tận nơi và tham khảo thêm nhiều sản phẩm khác. Miễn phí vận chuyển toàn quốc cho mọi đơn hàng . Đổi trả dễ dàng. Thanh toán bảo mật
+          description: Mô tả sản phẩm có thể truyền hoặc không
+        seo_title:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+          description: Tiêu đề seo của sản phẩm có thể truyền hoặc không
+        seo_keywords:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+          description: Seo keywords của sản phẩm có thể truyền hoặc không
+        seo_description:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+          description: Mô tả seo của sản phẩm có thể truyền hoặc không
+
+    UpdateAdminProductBody:
+      type: object
+      properties:
+        product_id:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+          description: Id của sản phẩm
+        category:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+          description: Id danh mục của sản phẩm có thể truyền lên body hoặc không truyền tùy vào client
+        image:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+          description: Ảnh của sản phẩm có thể truyền lên body hoặc không truyền tùy vào client
+        images:
+          type: array
+          items:
+            type: string
+            example:
+              [
+                'http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg',
+                'http/localhost:8080/images/482077984_658517390083420_1707021771831644247_n.jpg',
+                http/localhost:8080/images/482077984_618517360083420_1707021771831644247_n.jpg
+              ]
+            description: Ảnh con của sản phẩm có thể truyền lên body hoặc không truyền tùy vào client
+        slug:
+          type: string
+          example: my-pham-thoi-thuong-2025
+          description: Slug của sản phẩm có thể truyền hoặc không
+        name:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+          description: Tên của sản phẩm có thể truyền hoặc không
+        price:
+          type: integer
+          example: 100000
+          description: Giá của sản phẩm có thể truyền hoặc không
+        price_before_discount:
+          type: integer
+          example: 200000
+          description: Giá trước khuyến mãi của sản phẩm có thể truyền hoặc không và luôn lớn hơn giá mới, có thể truyền hoặc không
+        quantity:
+          type: integer
+          example: 100
+          description: Số lượng sản phẩm có thể truyền hoặc không
+        sold:
+          type: integer
+          example: 100
+          description: Số lượng bán chạy của sản phẩm có thể truyền hoặc không
+        view:
+          type: integer
+          example: 100
+          description: Số lượng phổ biến của sản phẩm có thể truyền hoặc không
+        rating:
+          type: integer
+          example: 5
+          description: Số sao của sản phẩm nằm trong khoảng từ 1 đến 5, có thể truyền hoặc không
+        description:
+          type: string
+          example: Mua son giao tận nơi và tham khảo thêm nhiều sản phẩm khác. Miễn phí vận chuyển toàn quốc cho mọi đơn hàng . Đổi trả dễ dàng. Thanh toán bảo mật
+          description: Mô tả sản phẩm có thể truyền hoặc không
+        seo_title:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+          description: Tiêu đề seo của sản phẩm có thể truyền hoặc không
+        seo_keywords:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+          description: Seo keywords của sản phẩm có thể truyền hoặc không
+        seo_description:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+          description: Mô tả seo của sản phẩm có thể truyền hoặc không
+
+    UpdateAdminProductSuccess:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+        category:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+        image:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+        images:
+          type: array
+          items:
+            type: string
+            example:
+              [
+                'http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg',
+                'http/localhost:8080/images/482077984_658517390083420_1707021771831644247_n.jpg',
+                http/localhost:8080/images/482077984_618517360083420_1707021771831644247_n.jpg
+              ]
+        slug:
+          type: string
+          example: my-pham-thoi-thuong-2025
+        name:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        price:
+          type: integer
+          example: 100000
+        price_before_discount:
+          type: integer
+          example: 200000
+        quantity:
+          type: integer
+          example: 100
+        sold:
+          type: integer
+          example: 100
+        view:
+          type: integer
+          example: 100
+        rating:
+          type: integer
+          example: 5
+        description:
+          type: string
+          example: Mua son giao tận nơi và tham khảo thêm nhiều sản phẩm khác. Miễn phí vận chuyển toàn quốc cho mọi đơn hàng . Đổi trả dễ dàng. Thanh toán bảo mật
+        seo_title:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        seo_keywords:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        seo_description:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+
+    ProductSuccess:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDetailSuccess'
+        pagination:
+          type: object
+          items:
+            $ref: '#/components/schemas/Pagination'
+
+    ProductDetailSuccess:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+        category:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+        image:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+        images:
+          type: array
+          items:
+            type: string
+            example:
+              [
+                'http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg',
+                'http/localhost:8080/images/482077984_658517390083420_1707021771831644247_n.jpg',
+                http/localhost:8080/images/482077984_618517360083420_1707021771831644247_n.jpg
+              ]
+        slug:
+          type: string
+          example: my-pham-thoi-thuong-2025
+        name:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        price:
+          type: integer
+          example: 100000
+        price_before_discount:
+          type: integer
+          example: 200000
+        quantity:
+          type: integer
+          example: 100
+        sold:
+          type: integer
+          example: 100
+        view:
+          type: integer
+          example: 100
+        rating:
+          type: integer
+          example: 5
+        description:
+          type: string
+          example: Mua son giao tận nơi và tham khảo thêm nhiều sản phẩm khác. Miễn phí vận chuyển toàn quốc cho mọi đơn hàng . Đổi trả dễ dàng. Thanh toán bảo mật
+        seo_title:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        seo_keywords:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        seo_description:
+          type: string
+          example: Mỹ phẩm thời thượng 2025
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+
+    UserClient:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: 67e61f3e69cb7eb1c30b70fc
+        email:
+          type: string
+          example: dolamthanhphat@gmail.com
+        name:
+          type: string
+          example: Phat
+        phone:
+          type: string
+          example: 0987654321
+        date_of_birth:
+          type: string
+          format: ISO8601
+          example: 2024-05-04T16:31:25.387Z
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        avatar:
+          type: string
+          example: http/localhost:8080/images/482077984_658517360083420_1707021771831644247_n.jpg
+
+    ListPurchase:
+      type: array
+      items:
+        $ref: '#/components/schemas/Purchase'
+
+    Purchase:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+        buy_count:
+          type: integer
+          example: 100
+        status:
+          type: string
+          example: '-1'
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        user:
+          $ref: '#/components/schemas/UserClient'
+        product:
+          $ref: '#/components/schemas/ProductDetailSuccess'
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 30
+        page_size:
+          type: integer
+          example: 1
+
+    CategoryProductSuccess:
+      type: object
+      properties:
+        category_products:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryProductDetailSuccess'
+        pagination:
+          type: object
+          items:
+            $ref: '#/components/schemas/Pagination'
+
+    CategoryProductDetailSuccess:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+        slug:
+          type: string
+          example: son-thoi
+        name:
+          type: string
+          example: Son thỏi
+        created_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+        updated_at:
+          type: string
+          format: ISO8601
+          example: 2025-03-28T04:02:06.576Z
+
+    CreateAdminCategoryProductBody:
+      type: object
+      properties:
+        slug:
+          type: string
+          example: son-thoi
+        name:
+          type: string
+          example: Son thỏi
+
+    UpdateAdminCategoryProductBody:
+      type: object
+      properties:
+        category_id:
+          type: string
+          example: 67ff8d8f3243c4bde9049ec8
+        slug:
+          type: string
+          example: son-thoi
+        name:
+          type: string
+          example: Son thỏi
+
+  securitySchemes:
+    UserAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token for normal users
+
+    AdminAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token for admins
