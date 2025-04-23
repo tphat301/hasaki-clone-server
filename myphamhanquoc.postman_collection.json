@@ -1,0 +1,1304 @@
+{
+	"info": {
+		"_postman_id": "b49ffa1b-9bc7-406a-98cf-7219abbd7316",
+		"name": "myphamhanquoc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20905751"
+	},
+	"item": [
+		{
+			"name": "Auth Client",
+			"item": [
+				{
+					"name": "Register Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"dolamthanhphat2@gmail.com\",\r\n    \"password\": \"Phat123!\",\r\n    \"confirm_password\": \"Phat123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"dolamthanhphat@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/forgot-password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"forgot_password_token\": \"\",\r\n    \"password\": \"\",\r\n    \"confirm_password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/reset-password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"old_password\": \"Phat123!\",\r\n    \"password\": \"Phat123!1\",\r\n    \"confirm_password\": \"Phat123!1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/change-password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ2OTM2MTAsImV4cCI6MTc0NDY5NDUxMH0.F7blKbeqPvsXsh0R9RA-KY5nS0obbgee9ZlCK8_YMVw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"dolamthanhphat@gmail.com\",\r\n    \"password\": \"Phat123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ2OTM2MTAsImV4cCI6MTc0NDY5NDUxMH0.F7blKbeqPvsXsh0R9RA-KY5nS0obbgee9ZlCK8_YMVw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjoxLCJpYXQiOjE3NDQ2OTM2MTAsImV4cCI6MTc1MzMzMzYxMH0._XTEwzUNtClr8ySqowdkhh0mHT_XpEK3rwFUOICTaYw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/logout",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_verify_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjowLCJ0b2tlbl90eXBlIjozLCJpYXQiOjE3NDQ2ODgzNTYsImV4cCI6MTc0NTI5MzE1Nn0.kJrlx84eN1-Gb_DjRbLCvRjGp7o6WqIeqkJLlehiLwk\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/verify-email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend email verify account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/resend-verify-email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"resend-verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/auth/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"avatar\": \"\",\r\n    \"name\": \"\",\r\n    \"address\": \"\",\r\n    \"phone\": \"\",\r\n    \"date_of_birth\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refresh_token\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/refresh-token",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload avatar account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/auth/upload-avatar",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"upload-avatar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth Admin",
+			"item": [
+				{
+					"name": "Register Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"dolamthanhphat@gmail.com\",\r\n    \"password\": \"Phat123!\",\r\n    \"confirm_password\": \"Phat123!\",\r\n    \"secret_key_accept\": \"~?$@#>z&?@#%&$@#@$%!$@#$%?a@!#*$@%&*teH{T@?a6#!~Z@?$@#\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"dolamthanhphat@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/forgot-password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"forgot_password_token\": \"\",\r\n    \"password\": \"\",\r\n    \"confirm_password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/reset-password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"old_password\": \"Phat123!\",\r\n    \"password\": \"Phat123!1\",\r\n    \"confirm_password\": \"Phat123!1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/change-password",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ2OTM2MTAsImV4cCI6MTc0NDY5NDUxMH0.F7blKbeqPvsXsh0R9RA-KY5nS0obbgee9ZlCK8_YMVw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"dolamthanhphat@gmail.com\",\r\n    \"password\": \"Phat123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZTMwNzhiZWQ4NGY1MmFlODE1ZmY3IiwidmVyaWZ5IjowLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ3MTE4MDAsImV4cCI6MTc0NDcxMjcwMH0.6lGGFGSSbe_CI5794F_DGLWGHaKrghWEZPOUPw8ygLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZTMwNzhiZWQ4NGY1MmFlODE1ZmY3IiwidmVyaWZ5IjowLCJ0b2tlbl90eXBlIjoxLCJpYXQiOjE3NDQ3MTE4MDAsImV4cCI6MTc1MzM1MTgwMH0.0D3loT88xKy-s2kMJfm7Ppzfm1F-zzt159Hg19SmbIA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/logout",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_verify_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZTMwNzhiZWQ4NGY1MmFlODE1ZmY3IiwidmVyaWZ5IjowLCJ0b2tlbl90eXBlIjozLCJpYXQiOjE3NDQ3MTE4MDAsImV4cCI6MTc0NTMxNjYwMH0.ImAm0mAOtmfeWAAKwJSTtWcWCrYXPe1XN9QFyoJp73c\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/verify-email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend email verify account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/resend-verify-email",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"resend-verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/admin/auth/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"avatar\": \"\",\r\n    \"name\": \"\",\r\n    \"address\": \"\",\r\n    \"phone\": \"\",\r\n    \"date_of_birth\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refresh_token\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/auth/refresh-token",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product Admin",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\": \"{{category}}\",\r\n    \"slug\": \"{{slug}}\",\r\n    \"name\": \"{{name}}\",\r\n    \"image\": \"{{image}}\",\r\n    \"images\": {{images}},\r\n    \"price\": 262000,\r\n    \"price_before_discount\": 598000,\r\n    \"quantity\": 40,\r\n    \"sold\": 40000,\r\n    \"view\": 920,\r\n    \"rating\": 4.4,\r\n    \"description\": \"{{desc}}\",\r\n    \"seo_title\": \"{{name}}\",\r\n    \"seo_keywords\": \"{{name}}\",\r\n    \"seo_description\": \"{{seo_description}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/products/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"67ff53a495df63dce900e7fa\",\r\n    \"category\": \"67ff53a495df63dce900e7fa\",\r\n    \"slug\": \"swagger-ui-express\",\r\n    \"name\": \"Swagger ui expresses\"\r\n    // \"image\": \"1.jpg\",\r\n    // \"price\": 100000,\r\n    // \"price_before_discount\": 200000,\r\n    // \"quantity\": 100,\r\n    // \"sold\": 10,\r\n    // \"view\": 20,\r\n    // \"rating\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/products/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_ids\": [\"67ff6647cb2e682ef927ce41\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/products/delete",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/admin/products/67ff663bcb2e682ef927ce3f",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products",
+								"67ff663bcb2e682ef927ce3f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/admin/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload image",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Upload hình ảnh sản phẩm thành công\", function() {\r",
+									"    pm.response.to.have.status(200)\r",
+									"    const responseJSON = pm.response.json()\r",
+									"    const image = responseJSON.data\r",
+									"    pm.environment.set('image', image)\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Administrator/Downloads/mypham/21/facebook-dynamic-son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-1740542290.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/admin/products/upload-image",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products",
+								"upload-image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload images",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Upload hình ảnh sản phẩm thành công\", function() {\r",
+									"    pm.response.to.have.status(200)\r",
+									"    const responseJSON = pm.response.json()\r",
+									"    const images = responseJSON.data\r",
+									"    pm.environment.set('images', JSON.stringify(images))\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/C:/Users/Administrator/Downloads/mypham/21/facebook-dynamic-son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-1740542290.jpg",
+										"/C:/Users/Administrator/Downloads/mypham/21/google-shopping-son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-1732003953.jpg",
+										"/C:/Users/Administrator/Downloads/mypham/21/promotions-auto-son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml_z1zf5yzNeP9nKzHc.png",
+										"/C:/Users/Administrator/Downloads/mypham/21/son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-1-1732002966.jpg",
+										"/C:/Users/Administrator/Downloads/mypham/21/son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-2-1732002966.jpg",
+										"/C:/Users/Administrator/Downloads/mypham/21/son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-3-1732002965.jpg",
+										"/C:/Users/Administrator/Downloads/mypham/21/son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-4-1732003908.jpg",
+										"/C:/Users/Administrator/Downloads/mypham/21/tem-phu-son-bong-bys-duong-moi-l01-sugar-pink-hong-baby-5-6ml-1732002979.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/admin/products/upload-images",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products",
+								"upload-images"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"67ff6632cb2e682ef927ce3d\",\r\n    \"category\": \"67ff53a495df63dce900e7fa\"\r\n    // \"slug\": \"swagger-ui-express\",\r\n    // \"name\": \"Swagger ui expresses\"\r\n    // \"image\": \"1.jpg\",\r\n    // \"price\": 100000,\r\n    // \"price_before_discount\": 200000,\r\n    // \"quantity\": 100,\r\n    // \"sold\": 10,\r\n    // \"view\": 20,\r\n    // \"rating\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/products/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Purchases",
+			"item": [
+				{
+					"name": "Add to cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ4MDUwNDgsImV4cCI6MTc0NDgwNTk0OH0.lugd_uZUrOGi6DOQlw3fDbf9j45pt-mMrUDUsIROG8U",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"67ff6632cb2e682ef927ce3d\",\r\n    \"buy_count\": 90\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/purchases/add-to-cart",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"purchases",
+								"add-to-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ4MDUwNDgsImV4cCI6MTc0NDgwNTk0OH0.lugd_uZUrOGi6DOQlw3fDbf9j45pt-mMrUDUsIROG8U",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"67ff6632cb2e682ef927ce3d\",\r\n    \"buy_count\": 130\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/purchases/update-cart",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"purchases",
+								"update-cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ4MDY4MDgsImV4cCI6MTc0NDgwNzcwOH0.-K7r0XL5gTeYrrrzPoKfssPditcOiDpsr52maftrlZc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/purchases/?status=-1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"purchases",
+								""
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ4MTAyNDIsImV4cCI6MTc0NDgxMTE0Mn0.Br_dhWcRnz9DEo6GZdP3PuCVWJnje8xZKENEbU_i8IQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"puschase_ids\": [\"67ff9da75e481a7122d7b05e\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/purchases/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"purchases",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buy products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjdmZGQ0ZTQ3NzgxMmRmYWZhZjg5ZDFhIiwidmVyaWZ5IjoxLCJ0b2tlbl90eXBlIjowLCJpYXQiOjE3NDQ4MTM5MzIsImV4cCI6MTc0NDgxNDgzMn0.jp9gDBFNZLgqw5661IDQnEaFqXTqN0uePYeDqR_sYQQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"body_cart\": [\r\n    {\r\n      \"product_id\": \"67ff663bcb2e682ef927ce3f\",\r\n      \"buy_count\": 90\r\n    },\r\n    {\r\n      \"product_id\": \"67ff6647cb2e682ef927ce41\",\r\n      \"buy_count\": 90\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/purchases/buy-products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"purchases",
+								"buy-products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category Product Admin",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"slug\": \"son-bong11\",\r\n    \"name\": \"Son bóng111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/category_products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"category_products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category_id\": \"6800983dda5f2ad1e7344166\",\r\n    \"name\": \"Son thỏi\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/category_products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"category_products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category_ids\": [\"680099874eac8dd63f178782\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/admin/category_products/delete",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"category_products",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/admin/category_products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"admin",
+								"category_products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product Client",
+			"item": [
+				{
+					"name": "Product List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "30",
+									"disabled": true
+								},
+								{
+									"key": "rating_filter",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "son moi",
+									"disabled": true
+								},
+								{
+									"key": "sort_by",
+									"value": "view",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product Detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/products/6800a0b96f2021b51a50491a",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"products",
+								"6800a0b96f2021b51a50491a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CategoryProduct Client",
+			"item": [
+				{
+					"name": "Category Product List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/category-products",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"category-products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
